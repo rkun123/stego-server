@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import r
+from db import engine
+from db.base import Base
 
+Base.metadata.create_all(engine)
+
+print('Hello')
 
 app = FastAPI(
   title='stego-server'

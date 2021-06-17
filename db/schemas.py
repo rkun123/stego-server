@@ -1,30 +1,31 @@
 from enum import Enum
-from sqlalchemy import Table, Column, Integer, String, DATETIME, ForeignKey, Interval, Geo
+from sqlalchemy import Table, Column, Integer, String, DATETIME, ForeignKey, Interval
 from datetime import datetime
 from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.elements import Case
 from sqlalchemy.sql.expression import column
 from sqlalchemy.sql.sqltypes import DATE, Float
+from utils.gen_primarykey import gen_primarykey
 from .base import Base
 
 class User(Base):
-  id = Column(String, primary_key=True, index=True)
-  name = Column(String, index=True)
-  mail = Column(String, unique=True, index=True, nullable=False)
+  id = Column(String, default=gen_primarykey, primary_key=True, index=True)
+  username = Column(String, index=True)
+  email = Column(String, unique=True, index=True, nullable=False)
   password_hash = Column(String, nullable=False)
   avatar_url = Column(String, nullable=True)
   created_at = Column(DATETIME, default=datetime.now)
   updated_at = Column(DATETIME, default=datetime.now)
   date_of_birth = Column(DATETIME, index=True, nullable=True)
 
-  posts = relationship('Post', backref='user')
+  posts = relationship('Post', back_populates='user')
 
 class Post(Base):
-  id = Column(String, primary_key=True, index=True)
+  id = Column(String, default=gen_primarykey, primary_key=True, index=True)
   content = Column(String(500), nullable=False)
   content_length = Column(Integer, nullable=False)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
-  reply_to_id = Column(String, ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE', nullable=True))
+  reply_to_id = Column(String, ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=True)
   reply_to = relationship('Post', lazy='joined', join_depth=1)
   writing_time = Column(Interval, index=True, nullable=False)
   lat = Column(Float, index=True, nullable=True)
@@ -38,33 +39,29 @@ class Post(Base):
   gyro_z = Column(Float, index=True, nullable=True)
   created_at = Column(DATETIME, default=datetime.now)
 
+  user = relationship(
+    'User',
+  )
+
   seen_users = relationship(
     'User',
     secondary='seen',
   )
-  seen = relationship('Seen')
 
   favorited_users = relationship(
     'User',
     secondary='favorite',
   )
-  seen = relationship('Favorite')
 
 class Seen(Base):
-  id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+  id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   created_at = Column(DATETIME, default=datetime.now)
 
-  user = relationship('User')
-  post = relationship('Post')
-
 class Favorite(Base):
-  id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+  id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   created_at = Column(DATETIME, default=datetime.now)
   updated_at = Column(DATETIME, default=datetime.now)
-
-  user = relationship('User')
-  post = relationship('Post')
