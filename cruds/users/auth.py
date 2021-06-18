@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm.session import Session
 from starlette.exceptions import HTTPException
-from cruds.users import authenticate_user, get_user, get_user_by_id
+from cruds.users import authenticate_user, get_user_by_id
 from schemas.user import User
 import jwt
 
@@ -36,9 +36,6 @@ def get_current_user(db: Session, token: str) -> User:
 	credentials_exception = HTTPException(
 		401,
 		detail='Could not validate credentials',
-		headers={
-			'WWW-Authenticate': 'Bearer'
-		}
 	)
 
 	try:

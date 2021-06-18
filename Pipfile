@@ -9,6 +9,7 @@ flake8 = "*"
 sqlalchemy = "*"
 uvicorn = "*"
 pyjwt = "*"
+python-multipart = "*"
 
 [dev-packages]
 
