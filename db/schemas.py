@@ -10,7 +10,7 @@ from .base import Base
 
 class User(Base):
   id = Column(String, default=gen_primarykey, primary_key=True, index=True)
-  username = Column(String, index=True)
+  username = Column(String, unique=True, index=True)
   email = Column(String, unique=True, index=True, nullable=False)
   password_hash = Column(String, nullable=False)
   avatar_url = Column(String, nullable=True)

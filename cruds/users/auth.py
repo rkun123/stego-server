@@ -24,8 +24,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 	return token
 
 
-def signin(db: Session, email: str, password: str) -> str:
-	user = authenticate_user(db, email, password)
+def signin(db: Session, username: str, password: str) -> str:
+	user = authenticate_user(db, username, password)
 	token = create_access_token({
 		'sub': user.id
 	})
