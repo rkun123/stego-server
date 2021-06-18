@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm.session import Session
 from starlette.exceptions import HTTPException
 from db import get_db
-from cruds.users import create_user, get_user
+from cruds.users import create_user, get_user, get_user_by_id
 from schemas.user import User
 
 user_router = APIRouter()
@@ -27,4 +27,9 @@ def token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @user_router.get('/me', response_model=User)
 def me(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
 	user = get_current_user(db, token)
+	return user
+
+@user_router.get('/search/{user_id}', response_model=User)
+def search_user(user_id: str, db: Session = Depends(get_db)):
+	user = get_user_by_id(db, user_id)
 	return user
