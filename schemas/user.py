@@ -1,27 +1,23 @@
 from typing import List, Optional
 from datetime import date, datetime, timedelta
-from pydantic import BaseModel, Field
-
-
-class CreateUser(BaseModel):
-	username: str = Field()
-	email: str = Field()
-	password: str = Field()
-	avatar_url: Optional[str] = Field()
-	date_of_birth: Optional[datetime] = Field()
-
-	class Config:
-		orm_mode = True
+from pydantic import BaseModel, Field, validator
+import re
 
 class BaseUser(BaseModel):
 	username: str = Field()
 	email: str = Field()
-	password_hash: str = Field()
+	password: Optional[str] = Field()
+	password_hash: Optional[str] = Field()
 	avatar_url: Optional[str] = Field()
 	date_of_birth: Optional[datetime] = Field()
 
 	class Config:
 		orm_mode = True
+	
+	@validator('email')
+	def email_format(cls, v):
+		assert re.fullmatch(r'^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$', v), 'email must be valid format'
+		return v
 
 class User(BaseUser):
 	id: str = Field()

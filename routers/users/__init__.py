@@ -1,6 +1,6 @@
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from cruds.users.auth import get_current_user, signin
-from schemas.user import CreateUser, GetAccessToken, Token, User
+from schemas.user import BaseUser, Token, User
 from fastapi import APIRouter
 from fastapi.param_functions import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -15,7 +15,7 @@ user_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/users/token')
 
 @user_router.post('/signup', response_model=User)
-def signup(payload: CreateUser, db: Session = Depends(get_db)):
+def signup(payload: BaseUser, db: Session = Depends(get_db)):
 	user = create_user(db, payload.username, payload.email, payload.date_of_birth, payload.password, payload.avatar_url)
 	return user
 
