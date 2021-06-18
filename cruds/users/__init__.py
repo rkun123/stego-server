@@ -1,4 +1,5 @@
 from os import name
+from typing import Optional
 from starlette.exceptions import HTTPException
 from schemas.user import BaseUser, User
 from db import schemas as models
@@ -46,7 +47,13 @@ def get_user(db: Session, email: str) -> User:
 		raise HTTPException(404, 'User not found')
 	return user
 
-def get_current_user(db: Session, email: str, password: str) -> User:
+def get_user_by_id(db: Session, id: str) -> Optional[User]:
+	user_orm = db.query(models.User).get(id)
+	if user_orm == None:
+		return None
+	return User.from_orm(user_orm)
+
+def authenticate_user(db: Session, email: str, password: str) -> User:
 	hashed_password = hash_password(password)
 	user = get_user(db, email)
 	if user.password_hash != hashed_password:

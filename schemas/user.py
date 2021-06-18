@@ -30,3 +30,11 @@ class User(BaseUser):
 
 	class Config:
 		orm_mode = True
+
+class Token(BaseModel):
+	access_token: str = Field()
+	token_type: str = Field()
+
+class GetAccessToken(BaseModel):
+	email: str = Field()
+	password: str = Field()
