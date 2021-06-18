@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Table, Column, Integer, String, DATETIME, ForeignKey, Interval
+from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, Interval
 from datetime import datetime
 from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.elements import Case
@@ -14,9 +14,9 @@ class User(Base):
   email = Column(String, unique=True, index=True, nullable=False)
   password_hash = Column(String, nullable=False)
   avatar_url = Column(String, nullable=True)
-  created_at = Column(DATETIME, default=datetime.now)
-  updated_at = Column(DATETIME, default=datetime.now)
-  date_of_birth = Column(DATETIME, index=True, nullable=True)
+  created_at = Column(DateTime, default=datetime.now)
+  updated_at = Column(DateTime, default=datetime.now)
+  date_of_birth = Column(DateTime, index=True, nullable=True)
 
   posts = relationship('Post', back_populates='user')
 
@@ -37,7 +37,7 @@ class Post(Base):
   gyro_x = Column(Float, index=True, nullable=True)
   gyro_y = Column(Float, index=True, nullable=True)
   gyro_z = Column(Float, index=True, nullable=True)
-  created_at = Column(DATETIME, default=datetime.now)
+  created_at = Column(DateTime, default=datetime.now)
 
   user = relationship(
     'User',
@@ -57,11 +57,11 @@ class Seen(Base):
   id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
-  created_at = Column(DATETIME, default=datetime.now)
+  created_at = Column(DateTime, default=datetime.now)
 
 class Favorite(Base):
   id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
-  created_at = Column(DATETIME, default=datetime.now)
-  updated_at = Column(DATETIME, default=datetime.now)
+  created_at = Column(DateTime, default=datetime.now)
+  updated_at = Column(DateTime, default=datetime.now)

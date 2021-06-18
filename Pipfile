@@ -10,6 +10,7 @@ sqlalchemy = "*"
 uvicorn = "*"
 pyjwt = "*"
 python-multipart = "*"
+psycopg2 = "*"
 
 [dev-packages]
 

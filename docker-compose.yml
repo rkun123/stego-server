@@ -3,7 +3,7 @@ services:
   db: 
     image: postgres:12
     volumes:
-      - ./postgres:/var/lib/postgresql/data/pgdata
+      - dbdata:/var/lib/postgresql/data/
     env_file:
       - .env
   
@@ -17,3 +17,6 @@ services:
     ports:
       - '8000:8000'
     command: 'sh -c "pipenv run uvicorn main:app --host 0.0.0.0 --reload"'
+
+volumes:
+  dbdata:
