@@ -8,7 +8,7 @@ RUN apk add --no-cache postgresql-libs && \
 RUN mkdir /app
 WORKDIR /app
 
-COPY Pipfile Pipfile.lock /app/
+COPY . /app/
 
 RUN pip install pipenv
 RUN pipenv install

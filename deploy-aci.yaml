@@ -1,0 +1,39 @@
+apiVersion: '2019-12-01'
+location: japaneast
+name: stegoserver
+properties:
+  containers:
+  - name: stego-sns-server
+    properties:
+      command:
+      - "sh"
+      - "-c"
+      - "pipenv run uvicorn main:app --host 0.0.0.0 --port 80 --reload"
+      environmentVariables:
+      - name: POSTGRES_USER
+        secureValue: stego_user@stego-sns-dbstring
+      - name: POSTGRES_PASSWORD
+        secureValue: stringhatoHatopoppo810?
+      - name: POSTGRES_HOST
+        secureValue: stego-sns-db.postgres.database.azure.com
+      - name: POSTGRES_DB
+        secureValue: postgres
+      image: stegoserver.azurecr.io/stego-server:latest
+      ports:
+      - port: 80
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGB: 1.5
+  osType: Linux
+  imageRegistryCredentials:
+  - server: stegoserver.azurecr.io
+    username: stegoserver
+    password: hBHXVjDLEpUtBv=z2uUyWnxzTQgYric5
+  ipAddress:
+    type: Public
+    ports:
+      - port: 80
+    dnsNameLabel: stegoaci
+tags: {}
+type: Microsoft.ContainerInstance/containerGroups
