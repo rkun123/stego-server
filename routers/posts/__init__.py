@@ -1,3 +1,4 @@
+from cruds.users.auth import get_current_user
 from cruds.seen import seeing_post
 from cruds.favorite import favoriting_post, unfavoriting_post
 from cruds import posts
@@ -41,16 +42,19 @@ def post(payload: CreatePost, db: Session = Depends(get_db), token: str = Depend
 
 @post_router.get('/', response_model=List[Post])
 def timeline(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	get_current_user(db, token)
 	timeline = get_timeline(db)
 	return timeline
 
 @post_router.get('/search/{post_id}', response_model=Post)
 def search_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	get_current_user(db, token)
 	post = get_post_by_id(db, post_id)
 	return post
 
 @post_router.put('/favorite/{post_id}', response_model=Favorite)
 def favorite_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	get_current_user(db, token)
 	favorite = favoriting_post(db, post_id, token)
 	return favorite
 

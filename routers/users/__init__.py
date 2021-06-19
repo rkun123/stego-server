@@ -31,5 +31,6 @@ def me(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
 
 @user_router.get('/search/{user_id}', response_model=User)
 def search_user(user_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	get_current_user(db, token)
 	user = get_user_by_id(db, user_id)
 	return user
