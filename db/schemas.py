@@ -34,6 +34,7 @@ class Post(Base):
   elevation = Column(Float, index=True, nullable=True)
   velocity = Column(Float, index=True, nullable=True)
   direction = Column(Float, index=True, nullable=True) # 0.0 - 360.0
+  tempurture = Column(Float, index=True, nullable=True)
   weather = Column(String(), index=True, nullable=True)
   gyro_x = Column(Float, index=True, nullable=True)
   gyro_y = Column(Float, index=True, nullable=True)
