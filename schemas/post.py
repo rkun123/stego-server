@@ -1,3 +1,4 @@
+from .image import Image
 from typing import List, Optional, Union
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
@@ -21,6 +22,7 @@ class BasePost(BaseModel):
 
 	seen_users: List[Union[User, BaseUser]] = Field()
 	favorited_users: List[Union[User, BaseUser]] = Field()
+	images: List[Image] = Field()
 
 	class Config:
 		orm_mode = True

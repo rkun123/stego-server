@@ -35,7 +35,8 @@ def post(payload: BasePost, db: Session = Depends(get_db)):
 		payload.weather, 
 		payload.gyro_x, 
 		payload.gyro_y, 
-		payload.gyro_z
+		payload.gyro_z,
+		payload.images
 		)
 	return post
 

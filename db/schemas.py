@@ -44,6 +44,10 @@ class Post(Base):
     'User',
   )
 
+  images = relationship(
+    'Image',
+  )
+
   seen_users = relationship(
     'User',
     secondary='seen',
@@ -66,3 +70,9 @@ class Favorite(Base):
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now)
+
+class Image(Base):
+  id = Column(String, default=gen_primarykey, primary_key=True, index=True)
+  image_url = Column(String)
+  post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
+  created_at = Column(DateTime, default=datetime.now)
