@@ -1,3 +1,5 @@
+from cruds.seen import seeing_post
+from cruds.favorite import favoriting_post, unfavoriting_post
 from cruds import posts
 from cruds.posts import get_post_by_id, get_timeline, create_post
 from sqlalchemy.sql.elements import Null
@@ -9,11 +11,12 @@ from sqlalchemy.orm.session import Session
 from starlette.exceptions import HTTPException
 from db import get_db
 from schemas.post import Post, BasePost
+from schemas.favorite import Favorite
+from schemas.seen import Seen
 from typing import List
+from routers.users import oauth2_scheme
 
 post_router = APIRouter()
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/users/token')
 
 @post_router.post('/', response_model=Post)
 def post(payload: BasePost, db: Session = Depends(get_db)):
@@ -45,3 +48,18 @@ def timeline(db: Session = Depends(get_db)):
 def search_post(post_id: str, db: Session = Depends(get_db)):
 	post = get_post_by_id(db, post_id)
 	return post
+
+@post_router.put('/favorite/{post_id}', response_model=Favorite)
+def favorite_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	favorite = favoriting_post(db, post_id, user_id)
+	return favorite
+
+@post_router.delete('/unfavorite/{post_id}', response_model=None)
+def unfavorite_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	unfavoriting_post(db, post_id, user_id)
+	return None
+
+@post_router.put('/seen/{post_id}', response_model=Seen)
+def see_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	seen = seeing_post(db, post_id, user_id)
+	return seen

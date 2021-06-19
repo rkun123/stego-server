@@ -1,4 +1,5 @@
 from enum import Enum
+from sqlalchemy.schema import Sequence
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, Interval
 from datetime import datetime
 from sqlalchemy.orm import relation, relationship
@@ -54,13 +55,13 @@ class Post(Base):
   )
 
 class Seen(Base):
-  id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
+  id = Column(Integer, Sequence('id_seq', start=1, increment=1), primary_key=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   created_at = Column(DateTime, default=datetime.now)
 
 class Favorite(Base):
-  id = Column(Integer, default=gen_primarykey, primary_key=True, autoincrement=True, index=True)
+  id = Column(Integer, Sequence('id_seq', start=1, increment=1), primary_key=True)
   user_id = Column(String(), ForeignKey('user.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   post_id = Column(String(), ForeignKey('post.id', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
   created_at = Column(DateTime, default=datetime.now)
