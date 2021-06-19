@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm.session import Session
 from starlette.exceptions import HTTPException
 from db import get_db
-from schemas.post import Post, BasePost
+from schemas.post import Post, BasePost, CreatePost
 from schemas.favorite import Favorite
 from schemas.seen import Seen
 from typing import List
@@ -19,12 +19,11 @@ from routers.users import oauth2_scheme
 post_router = APIRouter()
 
 @post_router.post('/', response_model=Post)
-def post(payload: BasePost, db: Session = Depends(get_db)):
+def post(payload: CreatePost, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
 	post = create_post(
 		db, 
+		token,
 		payload.content, 
-		payload.content_length, 
-		payload.user_id, 
 		payload.reply_to_id, 
 		payload.writing_time, 
 		payload.lat, 
@@ -41,26 +40,26 @@ def post(payload: BasePost, db: Session = Depends(get_db)):
 	return post
 
 @post_router.get('/', response_model=List[Post])
-def timeline(db: Session = Depends(get_db)):
+def timeline(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
 	timeline = get_timeline(db)
 	return timeline
 
 @post_router.get('/search/{post_id}', response_model=Post)
-def search_post(post_id: str, db: Session = Depends(get_db)):
+def search_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
 	post = get_post_by_id(db, post_id)
 	return post
 
 @post_router.put('/favorite/{post_id}', response_model=Favorite)
-def favorite_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-	favorite = favoriting_post(db, post_id, user_id)
+def favorite_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	favorite = favoriting_post(db, post_id, token)
 	return favorite
 
 @post_router.delete('/unfavorite/{post_id}', response_model=None)
-def unfavorite_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-	unfavoriting_post(db, post_id, user_id)
+def unfavorite_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	unfavoriting_post(db, post_id, token)
 	return None
 
 @post_router.put('/seen/{post_id}', response_model=Seen)
-def see_post(user_id: str, post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-	seen = seeing_post(db, post_id, user_id)
+def see_post(post_id: str, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+	seen = seeing_post(db, post_id, token)
 	return seen

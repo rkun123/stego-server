@@ -1,3 +1,4 @@
+from cruds.users.auth import get_current_user
 from cruds.image import upload_image
 from os import name
 from routers import posts
@@ -16,9 +17,8 @@ def get_timeline(db: Session) -> List[Post]:
 	return db.query(models.Post).all()
 
 def create_post(db: Session, 
+		token: str,
 		content: str, 
-		content_length: int, 
-		user_id: str, 
 		reply_to_id: Optional[str], 
 		writing_time: timedelta, 
 		lat: Optional[float], 
@@ -32,21 +32,19 @@ def create_post(db: Session,
 		gyro_z: Optional[float],
 		images: Optional[List[Image]]
 		) -> Post:
-	if len(content) <= 0 or content_length <= 0:
+	if len(content) <= 0:
 		raise HTTPException(400, 'The content is empty')
 
-	if not get_user_by_id(db, user_id):
-		raise HTTPException(404, 'User not found')
-	
 	if reply_to_id:
 		if not get_post_by_id(db, reply_to_id):
 			raise HTTPException(404, 'Post not found')
 
+	user = get_current_user(db, token)
 
 	post_orm = models.Post(
 		content=content,
-		content_length=content_length,
-		user_id=user_id,
+		content_length=len(content),
+		user_id=user.id,
 		reply_to_id=reply_to_id,
 		writing_time=writing_time,
 		lat=lat,
