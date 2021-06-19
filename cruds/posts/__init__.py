@@ -57,9 +57,6 @@ def create_post(db: Session,
 		gyro_x=gyro_x,
 		gyro_y=gyro_y,
 		gyro_z=gyro_z,
-		seen_users=[],
-		favorited_users=[],
-		images=[]
 	)
 
 	db.add(post_orm)
