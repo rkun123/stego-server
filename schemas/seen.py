@@ -9,6 +9,6 @@ class BaseSeen(BaseModel):
 		orm_mode = True
 
 class Seen(BaseSeen):
-	id: str = Field()
+	id: int = Field()
 	created_at: datetime = Field(default_factory=datetime.now)
 	updated_at: datetime = Field(default_factory=datetime.now)
