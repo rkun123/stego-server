@@ -14,7 +14,8 @@ from datetime import datetime, timedelta
 import hashlib
 
 def get_timeline(db: Session) -> List[Post]:
-	return db.query(models.Post).all()
+	posts = db.query(models.Post).all()
+	return list(map(Post.from_orm, posts))
 
 def create_post(db: Session, 
 		token: str,

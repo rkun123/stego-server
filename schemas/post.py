@@ -19,7 +19,9 @@ class BasePost(BaseModel):
 	gyro_x: Optional[float] = Field()
 	gyro_y: Optional[float] = Field()
 	gyro_z: Optional[float] = Field()
-
+	
+	user: User = Field()
+	
 	seen_users: List[Union[User, BaseUser]] = Field()
 	favorited_users: List[Union[User, BaseUser]] = Field()
 	images: List[Image] = Field()
