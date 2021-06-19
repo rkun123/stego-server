@@ -16,9 +16,9 @@ def hash_password(password: str) -> str:
 def create_user(db: Session, username: str, email: str, date_of_birth: datetime, password: str, avatar_url: str = None) -> User:
 	hashed_password = hash_password(password)
 
-	user = _get_user(db, email)
+	user = _get_user(db, username)
 	if user != None:
-		raise HTTPException(400, 'Specified email has already taken')
+		raise HTTPException(400, 'Specified username has already taken')
 	
 	user_orm = models.User(
 		username=username,

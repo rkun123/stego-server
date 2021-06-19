@@ -38,7 +38,7 @@ def create_post(db: Session,
 
 	if reply_to_id:
 		if not get_post_by_id(db, reply_to_id):
-			raise HTTPException(404, 'Post not found')
+			raise HTTPException(404, 'Post to reply not found')
 
 	user = get_current_user(db, token)
 
