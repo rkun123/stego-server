@@ -85,8 +85,8 @@ class Filter(BaseModel):
 		return v
 
 class QueryPost(BaseModel):
-	sort: Sort = Field()
-	filter: Filter = Field()
+	sort: Optional[Sort] = Field()
+	filter: Optional[Filter] = Field()
 
 	class Config:
 		orm_mode = True
