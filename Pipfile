@@ -11,6 +11,7 @@ uvicorn = "*"
 pyjwt = "*"
 python-multipart = "*"
 psycopg2 = "*"
+requests = "*"
 
 [dev-packages]
 

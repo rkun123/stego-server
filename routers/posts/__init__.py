@@ -33,8 +33,6 @@ def post(payload: CreatePost, db: Session = Depends(get_db), token: str = Depend
 		payload.elevation, 
 		payload.velocity, 
 		payload.direction,
-		payload.tempurture,
-		payload.weather, 
 		payload.gyro_x, 
 		payload.gyro_y, 
 		payload.gyro_z,
